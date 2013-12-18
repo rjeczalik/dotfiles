@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+export GOLANG=${HOME}/opt/golang
+export GOROOT=${GOLANG}/go
+export GOPATH=${GOLANG}/pkg
+export GOBIN=${GOLANG}/bin
+export PATH=${GOROOT}/bin:${GOBIN}:${PATH}

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+PATH=${HOME}/opt/ccollab-cmdline:/usr/local/sbin:${HOME}/opt/pulse-dev/bin:${HOME}/opt/select-makepp:${PATH}
+
+export PATH

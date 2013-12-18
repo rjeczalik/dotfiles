@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+findmk() {
+  [ -z "${1}" ] && {
+    echo "usage: findmk <pattern>" 1>&2
+    return 1
+  }
+  find . \( -name '*.mk' -or -name Makeppfile \) -exec grep -nH "${1}" {} +
+}
+
+findsrc() {
+  [ -z "${1}" ] && {
+    echo "usage: findmk <pattern>" 1>&2
+    return 1
+  }
+  find . \( -name '*.c*' -or -name '*.h' \) -exec grep -nH "${1}" {} +
+}
+

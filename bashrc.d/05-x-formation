@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+BOOST_INCLUDEDIR=${HOME}/cpp/boost/include
+BOOST_LIBRARYDIR=${HOME}/cpp/boost/lib/darwin_universal
+
+ICU_INCLUDEDIR=${HOME}/cpp/icu/include
+ICU_LIBRARYDIR=${HOME}/cpp/icu/lib
+
+XF_BOOST_DIR=${HOME}/cpp/boost
+
+MAKEPPCACHEPATH="/Volumes/External/X-Formation/makepp_cache"
+MAKEPPCACHEFLAG="-b${MAKEPPCACHEPATH}"
+MAKEPPLOGFLAG="-s --no-print-directory --no-log"
+MAKEPPFLAGS="-r --no-path-exe-dep --gullible -j8 ${MAKEPPCACHEFLAG} ${MAKEPPLOGFLAG}"
+
+makepp() {
+  chmod -R 777 "${MAKEPPCACHEPATH}" 2>/dev/null
+  /usr/local/bin/makepp ${*}
+}
+
+toggle-makepp-cache() {
+  echo ${MAKEPPFLAGS} | grep "\\${MAKEPPCACHEFLAG}" &>/dev/null && {
+    export MAKEPPFLAGS=$(echo ${MAKEPPFLAGS} | sed -e"s:${MAKEPPCACHEFLAG}::")
+    echo "makepp: cache if off"
+  } || {
+    export MAKEPPFLAGS="${MAKEPPFLAGS} ${MAKEPPCACHEFLAG}"
+    echo "makepp: cache if on"
+  }
+}
+
+toggle-makepp-log() {
+  echo ${MAKEPPFLAGS} | grep "\\${MAKEPPLOGFLAG}" &>/dev/null && {
+    export MAKEPPFLAGS=$(echo ${MAKEPPFLAGS} | sed -e"s:${MAKEPPLOGFLAG}::")
+    echo "makepp: log if on"
+  } || {
+    export MAKEPPFLAGS="${MAKEPPFLAGS} ${MAKEPPLOGFLAG}"
+    echo "makepp: log is off"
+  }
+}
+
+export BOOST_INCLUDEDIR BOOST_LIBRARYDIR ICU_INCLUDEDIR ICU_LIBRARYDIR XF_BOOST_DIR MAKEPPFLAGS MAKEPPCACHEPATH MAKEPPCACHEFLAG MAKEPPLOGFLAG
+

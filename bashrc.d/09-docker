@@ -1,0 +1,8 @@
+#!/usr/bin/env docker
+
+BOX_CPU=2
+BOX_MEM=1024
+PRIVATE_NETWORK=10.10.0.4
+
+export BOX_CPU BOX_MEM PRIVATE_NETWORK
+
