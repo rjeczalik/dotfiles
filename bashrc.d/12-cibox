@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+CIBOX_HOME="/Volumes/External"
+
+cibox_start() {
+  local dev=$(diskutil list | perl -ne '/.*Apple_HFS\s+(\d+)\.\d\sGB\s+(disk\ds\d).*/&&print "$1 $2\n"' |
+              while read size vol; do
+                [ ${size} -ge 255 ] && echo /dev/${vol};
+              done)
+  [ -z "${dev}" ] && {
+    echo "cibox_start: external ssd is not plugged in" 1>&2
+    return 1
+  }
+  truecrypt -k "" --protect-hidden=no ${dev} "${CIBOX_HOME}" || return 1
+  for serv in gitlab-ci-runner jenkins-slave; do
+    launchctl load -w "${CIBOX_HOME}"/Users/rjeczalik/Library/LaunchAgents/"${serv}".plist || return 1
+  done
+  for vm in Docker Win2012; do
+    cd "${CIBOX_HOME}"/Vagrant/"${vm}" && vagrant up || return 1
+  done
+}
+
+cibox_stop() {
+  for vm in Win2012 Docker; do
+    cd "${CIBOX_HOME}"/Vagrant/"${vm}" && vagrant halt || return 1
+  done
+  for serv in jenkins-slave gitlab-ci-runner; do
+    launchctl unload -w "${CIBOX_HOME}"/Users/rjeczalik/Library/LaunchAgents/"${serv}".plist || return 1
+  done
+  truecrypt -d "${CIBOX_HOME}"
+}
+

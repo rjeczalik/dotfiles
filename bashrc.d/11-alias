@@ -16,3 +16,5 @@ findsrc() {
   find . \( -name '*.c*' -or -name '*.h' \) -exec grep -nH "${1}" {} +
 }
 
+alias truecrypt='/Applications/TrueCrypt.app/Contents/MacOS/Truecrypt --text'
+

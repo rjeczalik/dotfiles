@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>EnableGlobbing</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>Label</key>
+  <string>gitlab-ci-runner</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>bundle</string>
+    <string>exec</string>
+    <string>./bin/runner</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/Users/rjeczalik/.rbenv/shims:/usr/local/sbin:/Users/rjeczalik/opt/golang/go/bin:/Users/rjeczalik/opt/golang/bin:/usr/local/bin:/Users/rjeczalik/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin</string>
+    <key>GOROOT</key>
+    <string>/Users/rjeczalik/opt/golang/go</string>
+    <key>GOPATH</key>
+    <string>/Users/rjeczalik/opt/golang/pkg</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>WorkingDirectory</key>
+  <string>/Volumes/External/Users/rjeczalik/opt/gitlab-ci-runner</string>
+</dict>
+</plist>
