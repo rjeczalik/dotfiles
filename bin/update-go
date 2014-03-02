@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+
+#########################################
+# Directory structure and prerequisites #
+#########################################
+
+case "$(uname)" in
+  *Darwin*)
+    tool=brew
+    ;;
+  *Ubuntu* | *Debian*)
+    tool=apt-get
+    ;;
+  *)
+    echo "$(uname) is not supported" >&2
+    exit
+esac
+
+type -a hg &>/dev/null || {
+  ${tool} install mercurial
+}
+
+type -a bzr &>/dev/null || {
+  ${tool} install python
+  ${tool} install bzr
+}
+
+[ -z "${GOLANG}" ] && {
+  GOLANG=${HOME}/opt/golang
+}
+
+[ -d "${GOLANG}" ] || {
+  mkdir -p ${GOLANG}
+  mkdir -p ${GOLANG}/pkg
+  mkdir -p ${GOLANG}/bin
+}
+
+[ -d "${HOME}/.bashrc.d" ] || {
+  mkdir -p "${HOME}"/.bashrc.d
+  cat >>"${HOME}"/.bashrc <<EOF
+
+###########################
+# Source scripts found in #
+# \${HOME}/.bashrc.d/     #
+###########################
+
+for s in \${HOME}/.bashrc.d/*; do
+  [ -f "\${s}" ] && [ -x "\${s}" ] && source "\${s}";
+done
+EOF
+}
+
+######
+# Go #
+######
+
+echo "# updating go . . ."
+
+unset GOROOT GOPATH GOBIN
+export GOROOT_FINAL="${GOLANG}"/go
+
+[ -d "${GOROOT_FINAL}" ] && {
+_tmp=$(mktemp /tmp/deploy-golang.XXXXXX)
+  ( cd "${GOROOT_FINAL}"; hg pull; hg update ) 2>&1 | tee -a ${_tmp}
+  REBUILD_GO=$(grep "no changes found" ${_tmp} 2>/dev/null)
+} || {
+  hg clone https://code.google.com/p/go "${GOROOT_FINAL}"
+}
+
+(
+  [ -z "${REBUILD_GO}" ] && {
+    cd "${GOROOT_FINAL}"/src
+    sed -i -e '/run.bash/d' all.bash
+    ./all.bash
+  } || {
+    true
+  }
+) && {
+  GOCFG="${HOME}"/.bashrc.d/03-golang
+  [ -f "${GOCFG}" ] || {
+    cat >"${GOCFG}" <<EOF
+#!/usr/bin/env bash
+
+################################
+# Go environment configuration #
+################################
+
+export GOLANG=\${HOME}/opt/golang
+export GOROOT=\${GOLANG}/go
+export GOPATH=\${GOLANG}/pkg
+export GOBIN=\${GOLANG}/bin
+export PATH=\${GOROOT}/bin:\${GOBIN}:\${PATH}
+EOF
+  chmod +x "${GOCFG}"
+  }
+} || {
+  exit 1
+}
+
+############
+# Packages #
+############
+
+. "${GOCFG}"
+
+pkgs=(
+  code.google.com/p/go.net
+  code.google.com/p/go.exp
+  code.google.com/p/go.tools
+  code.google.com/p/go.tools/cmd/cover
+  code.google.com/p/go.tools/cmd/vet
+  code.google.com/p/go.blog
+  code.google.com/p/go.text
+  code.google.com/p/go.image
+  code.google.com/p/go.talks
+  code.google.com/p/go.crypto
+  github.com/bradfitz/goimports
+  github.com/nsf/gocode
+  github.com/mattn/gom
+  launchpad.net/gocheck
+)
+
+for pkg in ${pkgs[@]}; do
+  echo "# updating ${pkg} . . ."
+  go get -u ${pkg}
+  find ${GOPATH}/src/${pkg}/cmd -depth 1 -type d 2>/dev/null |
+    sed "s:${GOPATH}/src/::" | tr '\n' ' ' | xargs echo |
+    while read p; do
+      [ ! -z "${p}" ] && go install "${p}"
+    done
+done

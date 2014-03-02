@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+git-stat() {
+  git log --shortstat --oneline | grep -E "file(s)? changed" | awk '{inserted+=$4; deleted+=$6} END {print "lines inserted:", inserted, "lines deleted:", deleted}'
+}

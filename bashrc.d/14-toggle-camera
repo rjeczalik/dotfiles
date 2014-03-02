@@ -1,0 +1,22 @@
+#!/usr/env/bash
+
+toggle-camera() {
+  if kextstat | grep AppleCameraInterface &>/dev/null; then
+    for ((i=0; i<6; i++)); do
+      if sudo kextunload /System/Library/Extensions/AppleCameraInterface.kext &>/dev/null; then
+        echo "# toggle-camera: AppleCameraInterface unloaded"
+        return 0
+      fi
+    done
+    echo "toggle-camera: failed to unload AppleCameraInterface"
+  else
+    if sudo kextload /System/Library/Extensions/AppleCameraInterface.kext &>/dev/null; then
+      echo "# toggle-camera: AppleCameraInterface loaded"
+      return 0
+    else
+      echo "toggle-camera: failed to load AppleCameraInterface"
+    fi
+  fi
+  return 1
+}
+

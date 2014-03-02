@@ -32,3 +32,36 @@ to-ogg() {
   echo "usage: to-ogg [<src-dir=./> [<dest-dir=src-dir>]]" 1>&2
   return 1
 }
+
+to-aac() {
+  local src=
+  local dst=
+
+  {
+    [ ${#} == 0 ] && src=. && dst=.
+  } || {
+    [ ${#} == 1 ] &&
+    [ -d "${1}" ] && src="${1}" && dst="${src}"
+  } || {
+    [ ${#} == 2 ] &&
+    [ -d "${1}" ] && src="${1}" &&
+    [ -d "${2}" ] && dst="${2}"
+  } && {
+    local log=`mktemp /tmp/to-aac.XXXXXX`
+    local src_file
+    for src_file in "${src}"/*.ogg; do
+      local dst_filename="${src_file##*/}"
+      local dst_file="${dst}/${dst_filename%*ogg}aac"
+      [ -f "${dst_file}" ] && {
+        echo "# skipping \"${src_file}\", \"${dst_file}\" already exists"
+      } || {
+        echo "# converting \"${src_file}\""
+        ffmpeg -i "${src_file}" -acodec aac -strict -2 -aq 60 -vn -ac 2 "${dst_file}" 1>>"${log}" 2>&1 || echo "! converting \"${src_file}\" failed"
+      }
+    done
+    echo "# [ log ${log} ]"
+    return 0
+  }
+  echo "usage: to-aac [<src-dir=./> [<dest-dir=src-dir>]]" 1>&2
+  return 1
+}

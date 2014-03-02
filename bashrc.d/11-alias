@@ -5,7 +5,7 @@ findmk() {
     echo "usage: findmk <pattern>" 1>&2
     return 1
   }
-  find . \( -name '*.mk' -or -name Makeppfile \) -exec grep -nH "${1}" {} +
+  find . \( -name '*.mk' -or -name Makeppfile \) -exec grep -niH "${1}" {} +
 }
 
 findsrc() {
@@ -13,8 +13,17 @@ findsrc() {
     echo "usage: findmk <pattern>" 1>&2
     return 1
   }
-  find . \( -name '*.c*' -or -name '*.h' \) -exec grep -nH "${1}" {} +
+  find . \( -name '*.c*' -or -name '*.h' \) -exec grep -niH "${1}" {} +
 }
+
+findgo() {
+  [ -z "${1}" ] && {
+    echo "usage: findgo <pattern>" 1>&2
+    return 1
+  }
+  find . -name '*.go' -exec grep -niH "${1}" {} +
+}
+
 
 alias truecrypt='/Applications/TrueCrypt.app/Contents/MacOS/Truecrypt --text'
 
