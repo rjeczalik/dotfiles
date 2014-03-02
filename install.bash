@@ -2,7 +2,12 @@
 
 TOP=$(dirname "${BASH_SOURCE[0]}")
 
-[ ! -f ~/.bashrc.d ] && ln -s {"${TOP}"/,~/.}bashrc.d
-[ ! -f ~/.bashrc ] && ln -s {"${TOP}"/,~/.}bashrc
+for f in bashrc bashrc.d vimrc vim; do
+	[ ! -f ~/.${f} ] && [ ! -d ~/.${f} ] && {
+		echo "# symlinking ${TOP}/${f} -> ~/.${f}"
+		ln -s {"${TOP}"/,~/.}${f}
+	}
+done
+
 [ ! -f "${TOP}"/powerline-shell/powerline-shell.py ] && ( cd "${TOP}"/powerline-shell; ./install.py )
 [ ! -f ~/powerline-shell.py ] && ln -s {"${TOP}"/powerline-shell/,~/}powerline-shell.py
