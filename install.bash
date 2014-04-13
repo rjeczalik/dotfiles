@@ -9,5 +9,3 @@ for f in bashrc bashrc.d vimrc vim; do
 	}
 done
 
-[ ! -f "${TOP}"/powerline-shell/powerline-shell.py ] && ( cd "${TOP}"/powerline-shell; ./install.py )
-[ ! -f ~/powerline-shell.py ] && ln -s {"${TOP}"/powerline-shell/,~/}powerline-shell.py
