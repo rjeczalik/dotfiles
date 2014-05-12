@@ -2,7 +2,6 @@ filetype off
 filetype plugin indent off
 set nocompatible
 set rtp+=~/.vim/bundle/vundle/
-set rtp+=$GOROOT/misc/vim
 call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'Blackrush/vim-gocode'
@@ -19,11 +18,13 @@ Bundle 'rizzatti/dash.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
 Bundle 'jistr/vim-nerdtree-tabs'
-Bundle 'wincent/Command-T'
+Bundle 'kien/ctrlp.vim'
+Bundle 'fatih/vim-go'
 filetype plugin indent on
 syntax on
 
 set t_Co=256
+set t_ut=
 set hlsearch
 set updatetime=100
 set ttimeoutlen=10

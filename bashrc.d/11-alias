@@ -24,6 +24,10 @@ findgo() {
   find . -name '*.go' -exec grep -niH "${1}" {} +
 }
 
+alias tmux="TERM=screen-256color-bce tmux"
 
-alias truecrypt='/Applications/TrueCrypt.app/Contents/MacOS/Truecrypt --text'
+# alias truecrypt='/Applications/TrueCrypt.app/Contents/MacOS/Truecrypt --text'
+
+export GOPATH=${HOME}/Workspace
+
 
