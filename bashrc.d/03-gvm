@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ -s "$HOME/.gvm/scripts/gvm" ]]; then
+   source "$HOME/.gvm/scripts/gvm"
+   gvm use go1.3.3
+fi
+
+export GOPATH=${HOME}/Workspace
+export GOBIN=${HOME}/bin

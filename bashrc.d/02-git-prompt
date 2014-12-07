@@ -92,10 +92,15 @@ Hostname="(`hostname`)"
 # I tweaked it to work on UBUNTU 11.04 & 11.10 plus made it mo' better
 
 
-__update_ps1() {
-  local ret=${?}
+__git_prompt=0
 
-  export PS1=$IBlue$Hostname$Color_Off'$(git branch &>/dev/null;\
+toggle-prompt() {
+	if [ ${__git_prompt} -eq 0 ]; then
+		__git_prompt=1
+		__update_ps1() {
+			local ret=${?}
+
+			export PS1=$IBlue$Hostname$Color_Off'$(git branch &>/dev/null;\
 if [ $? -eq 0 ]; then \
   echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
   if [ "$?" -eq "0" ]; then \
@@ -109,8 +114,21 @@ else \
   # @2 - Prompt when not in GIT repo
     echo " '$Yellow$PathShort$Color_Off'"; \
     fi)''$(if [ '${ret}' -eq 0 ]; then echo " \$ "; else echo "'${IRed}' \$'${ColorOff}${IWhite}' "; fi)'
-
+	}
+	else
+		__git_prompt=0
+		__update_ps1() {
+			local ret=${?}
+			if [ ${ret} -eq 0 ]; then
+				export PS1="$IBlue$Hostname$Color_Off $Yellow$PathShort$Color_Off \$ "
+			else
+				export PS1="$IBlue$Hostname$Color_Off $Yellow$PathShort$Color_Off ${IRed}\$${ColorOff}${IWhite} "
+			fi
+		}
+	fi
 }
+
+toggle-prompt
 
 export PROMPT_COMMAND="__update_ps1; ${PROMPT_COMMAND}"
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-PATH=${HOME}/opt/ccollab-cmdline:${HOME}/opt/ocp/bin:/usr/local/sbin:${HOME}/opt/pulse-dev/bin:${HOME}/dotfiles/bin:${HOME}/opt/select-makepp:${PATH}:/opt/pulse-dev/bin
+PATH=${HOME}/opt/ccollab-cmdline:${HOME}/opt/ocp/bin:/usr/local/sbin:${HOME}/opt/pulse-dev/bin:${HOME}/dotfiles/bin:${HOME}/opt/select-makepp:${PATH}
 
 export PATH

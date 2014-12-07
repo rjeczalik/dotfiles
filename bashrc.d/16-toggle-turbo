@@ -1,0 +1,21 @@
+#!/usr/env/bash
+
+toggle-turbo() {
+  if kextstat | grep DisableTurboBoost &>/dev/null; then
+    for i in {0..6}; do
+      if sudo kextunload /System/Library/Extensions/DisableTurboBoost.kext &>/dev/null; then
+        echo "# toggle-turbo: DisableTurboBoost unloaded"
+        return 0
+      fi
+    done
+    echo "toggle-turbo: failed to unload DisableTurboBoost"
+  else
+    if sudo kextload /System/Library/Extensions/DisableTurboBoost.kext &>/dev/null; then
+      echo "# toggle-turbo: DisableTurboBoost loaded"
+      return 0
+    else
+      echo "toggle-turbo: failed to load DisableTurboBoost"
+    fi
+  fi
+  return 1
+}
