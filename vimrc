@@ -1,10 +1,10 @@
 filetype off
 filetype plugin indent off
 set nocompatible
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=$GOROOT/misc/vim
 call vundle#rc()
 Bundle 'gmarik/vundle'
-Bundle 'Blackrush/vim-gocode'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'mileszs/ack.vim'
 Bundle 'Lokaltog/vim-easymotion'
@@ -16,20 +16,22 @@ Bundle 'majutsushi/tagbar'
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/syntastic'
 Bundle 'jistr/vim-nerdtree-tabs'
-Bundle 'kien/ctrlp.vim'
 Bundle 'fatih/vim-go'
+Bundle 'kien/ctrlp.vim'
+Bundle 'bling/vim-airline'
+Bundle 'wakatime/vim-wakatime'
 filetype plugin indent on
 syntax on
 
 set t_Co=256
-set t_ut=
 set hlsearch
 set updatetime=100
 set ttimeoutlen=10
 set title
-set tabstop=4 shiftwidth=4
+" set expandtab " ruby
+"set tabstop=2 shiftwidth=2 " ruby
+set tabstop=4 shiftwidth=4 " rest
 set backspace=2
 set colorcolumn=80
 "set clipboard=unnamedplus
@@ -37,11 +39,35 @@ set number
 set wildignore+=*.o,*.obj,.git,*.dll,*.so,*.a,*/tmp/*,*/temp/*,*/out/*,*.swp,*.tar.*,*.zip
 set listchars=tab:❘-,trail:·,extends:»,precedes:«,nbsp:×,eol:¶
 set mouse=a
+"set statusline+=%o
+"set guifont=Source\ Code\ Pro\ for\ Powerline
+"set guifont=Liberation_Mono_for_Powerline:h10
+set laststatus=2
 
-colorscheme herald
+"colorscheme herald
 
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+  endif
+
+  " unicode symbols
+  let g:airline_left_sep = '»'
+  let g:airline_left_sep = '▶'
+  let g:airline_right_sep = '«'
+  let g:airline_right_sep = '◀'
+  let g:airline_symbols.linenr = '␊'
+  let g:airline_symbols.linenr = '␤'
+  let g:airline_symbols.linenr = '¶'
+  let g:airline_symbols.branch = '⎇'
+  let g:airline_symbols.paste = 'ρ'
+  let g:airline_symbols.paste = 'Þ'
+  let g:airline_symbols.paste = '∥'
+  let g:airline_symbols.whitespace = 'Ξ'
+
+let g:airline_powerline_fonts = 1
 let g:gofmt_command = 'goimports'
 let g:EasyMotion_leader_key = '\'
+let g:go_fmt_command = "goimports"
 let g:EasyMotion_keys = 'abcdefghijklmnopqrstuvwxyz'
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ackprg = 'ag --nogroup --nocolor --column'
@@ -88,6 +114,8 @@ noremap <F2> :set list!<CR>
 noremap <F3> :CommandTFlush<CR>
 nmap <F7> <plug>NERDTreeTabsToggle<CR>
 nmap <F8> :TagbarToggle<CR>
+
+
 
 nmap <C-n> :tabnext<CR>
 map <C-n> :tabnext<CR>
